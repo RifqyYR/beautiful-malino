@@ -40,7 +40,6 @@ function hapusData(id) {
 const editBtn = document.getElementById('editBtn');
 
 function editData(id) {
-  console.log(id);
   fetch('controller/get-item.php?id=' + id)
     .then(response => response.json())
     .then(data => {

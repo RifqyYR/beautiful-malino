@@ -1,6 +1,8 @@
 <?php
   include '../utils/config.php';
-  $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+  include '../utils/query.php';
+
+  $conn = createConnection();
   if (!$conn) {
     die('Koneksi Gagal: ' . mysqli_connect_error());
   }
@@ -15,14 +17,14 @@
   $layanan_transportasi = isset($_POST['layanan_transportasi']) && $_POST['layanan_transportasi'] == 'on' ? 1 : 0;
   $layanan_makanan = isset($_POST['layanan_makanan']) && $_POST['layanan_makanan'] == 'on' ? 1 : 0;
 
-  $stmt = $conn->prepare("INSERT INTO reservasi (nama, nomor_telepon, waktu_pelaksanaan, jumlah_peserta, jumlah_pembayaran, layanan_penginapan, layanan_transportasi, layanan_makanan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt = $conn->prepare($create_query);
   $stmt->bind_param("ssiiiiii", $nama, $nomor_telepon, $waktu_perjalanan, $jumlah_peserta, $jumlah_tagihan, $layanan_penginapan, $layanan_transportasi, $layanan_makanan);
 
   if ($stmt->execute()) {
     header("Location: ../index.php?success=true");
     exit;
   } else {
-    header("Location: error.php");
+    header("Location: ../error.php");
     exit;
   }
 

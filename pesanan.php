@@ -48,17 +48,19 @@
     ?>
     <?php
       include 'utils/config.php';
-      $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+      include 'utils/query.php';
+
+      $conn = createConnection();
       if (!$conn) {
         die('Koneksi Gagal: ' . mysqli_connect_error());
       }
-      $sql = "SELECT * FROM reservasi";
-      $result = mysqli_query($conn, $sql);
+
+      $result = mysqli_query($conn, $read_all_query);
 
       if (mysqli_num_rows($result) > 0) {
         foreach ($result as $item) {
           $services = [];
-          
+
           if ($item['layanan_penginapan'] == 1) {
             $services[] = 'Penginapan';
           }

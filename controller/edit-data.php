@@ -1,6 +1,8 @@
 <?php
   include '../utils/config.php';
-  $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+  include '../utils/query.php';
+
+  $conn = createConnection();
   if (!$conn) {
     die('Koneksi Gagal: ' . mysqli_connect_error());
   }
@@ -16,14 +18,14 @@
   $checkbox_transportasi = isset($_POST['checkbox_transportasi']) && $_POST['checkbox_transportasi'] == 'on' ? 1 : 0;
   $checkbox_makanan = isset($_POST['checkbox_makanan']) && $_POST['checkbox_makanan'] == 'on' ? 1 : 0;
 
-  $stmt = $conn->prepare("UPDATE reservasi SET nama = ?, nomor_telepon = ?, waktu_pelaksanaan = ?, jumlah_peserta = ?, jumlah_pembayaran = ?, layanan_penginapan = ?, layanan_transportasi = ?, layanan_makanan = ? WHERE id = ?");
+  $stmt = $conn->prepare($update_query);
   $stmt->bind_param("ssiiiiiii", $nama, $nomor_telepon, $waktu_pelaksanaan, $jumlah_peserta, $jumlah_pembayaran, $checkbox_penginapan, $checkbox_transportasi, $checkbox_makanan, $id);
 
   if ($stmt->execute()) {
     header("Location: ../pesanan.php?success=true");
     exit;
   } else {
-    header("Location: error.php");
+    header("Location: ../error.php");
     exit;
   }
 

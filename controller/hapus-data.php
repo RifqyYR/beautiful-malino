@@ -1,17 +1,27 @@
 <?php 
   include '../utils/config.php';
-  $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+include '../utils/query.php';
+
+  $conn = createConnection();
   if (!$conn) {
     die('Koneksi Gagal: ' . mysqli_connect_error());
   }
+  
   if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $sql = "DELETE FROM reservasi WHERE id=$id";
-    if (mysqli_query($conn, $sql)) {
+
+    $stmt = $conn->prepare($delete_query);
+    $stmt->bind_param('i', $id);
+
+    if ($stmt->execute()) {
       header("Location: ../pesanan.php");
       exit;
     } else {
-      echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+      header("Location: ../error.php");
+      exit;
     }
   }
+
+  $stmt->close();
+  $conn->close();
 ?>
